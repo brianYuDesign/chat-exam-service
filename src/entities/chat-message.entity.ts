@@ -1,14 +1,15 @@
-import { PrimaryGeneratedColumn, Column } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
 import { BaseEntity } from "./base.entity";
 
+@Entity("chat_message")
 export class ChatMessageEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "int", length: 100, nullable: true })
+  @Column({ type: "int", nullable: true })
   chatId!: number;
 
-  @Column({ type: "int", length: 100, nullable: true })
+  @Column({ type: "int", nullable: true })
   sender!: number;
 
   @Column({ type: "varchar", length: 100, nullable: false })

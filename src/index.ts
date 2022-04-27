@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import logger from "./logger";
 import database from "./database";
 
-export const startApp = async () => {
+const startApp = async () => {
   await logger.init();
   await database.init();
   const app = express();

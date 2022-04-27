@@ -1,4 +1,3 @@
-import logger from "./logger";
 import { Connection, ConnectionOptions, createConnection } from "typeorm";
 
 const config = {
@@ -20,7 +19,6 @@ class Database {
   conn: Connection | undefined;
   async init() {
     this.conn = await createConnection(config as ConnectionOptions);
-    logger.info({ message: "database is connected!" });
   }
 }
 
