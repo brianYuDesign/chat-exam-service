@@ -9,10 +9,8 @@ export const startApp = async () => {
   const app = express();
 
   app.use(async (req, res, next) => {
-    const traceId = (res.locals.traceId = getTraceId(req));
     logger.debug({
       type: "request",
-      traceId,
       originalUrl: req.originalUrl,
     });
     next();
@@ -25,8 +23,6 @@ export const startApp = async () => {
   app.use(((error, req, res, next) => {
     logger.error({
       type: "error",
-      traceId: res.locals.traceId,
-      tracePath: res.locals.tracePath,
       originalUrl: req.originalUrl,
       msg:
         error instanceof Error ? error.stack ?? error.message : String(error),
@@ -40,10 +36,5 @@ export const startApp = async () => {
   const port = process.env.RUN_PORT;
   app.listen(port, () => logger.info({ message: "server is running!", port }));
 };
-
-const getTraceId = (req: Request) =>
-  String(req.headers["x-trace-id"] || "") ||
-  String(req.headers["x-request-id"] || "") ||
-  v4();
 
 startApp();
