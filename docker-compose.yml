@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MARIADB_DATABASE: chat
+      TZ: Asia/Taipei
+  redis:
+    image: "redis:alpine"
+    ports:
+      - 6379:6379
