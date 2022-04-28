@@ -6,11 +6,13 @@ const create = async (data: Partial<ChatMessageEntity>) => {
   return await chatMessageRepository.save(data);
 };
 
-const findByChatId = async (chatId: number) => {
+const findByChatId = async (chatId: number, take?: number, skip?: number) => {
   const chatMessageRepository = getRepository(ChatMessageEntity);
   return await chatMessageRepository.find({
     where: { chatId },
     order: { createdAt: "DESC" },
+    take: take || 20,
+    skip: skip || 0,
   });
 };
 export default { create, findByChatId };

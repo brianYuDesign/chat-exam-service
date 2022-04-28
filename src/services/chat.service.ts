@@ -16,8 +16,12 @@ const createChatMessage = async (data: {
   await publisher.publish("CREATE_MESSAGE", JSON.stringify(chatMessage));
 };
 
-const getChatMessageByChatId = async (chatId: number) => {
-  const chatMessageList = await chatMessageRepository.findByChatId(chatId);
+const getChatMessageByChatId = async (
+  chatId: number,
+  take?: number,
+  skip?: number
+) => {
+  const chatMessageList = await chatMessageRepository.findByChatId(chatId,take,skip);
   return chatMessageList;
 };
 
