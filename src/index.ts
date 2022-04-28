@@ -32,7 +32,6 @@ const startApp = async () => {
     const data = JSON.parse(message);
     if (channel === "CREATE_MESSAGE") {
       const { chatId, userId, content } = data;
-      console.log(chatId, userId, content);
       io.sockets.to(chatId).emit("CREATE_MESSAGE", data);
     }
   });
