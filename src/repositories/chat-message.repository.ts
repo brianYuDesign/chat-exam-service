@@ -1,9 +1,14 @@
-import { getRepository } from "typeorm";
+import { FindManyOptions, getRepository } from "typeorm";
 import { ChatMessageEntity } from "../entities/chat-message.entity";
 
 const create = async (data: Partial<ChatMessageEntity>) => {
   const chatMessageRepository = getRepository(ChatMessageEntity);
   return await chatMessageRepository.save(data);
+};
+
+const find = async (data: FindManyOptions<ChatMessageEntity>) => {
+  const chatMessageRepository = getRepository(ChatMessageEntity);
+  return await chatMessageRepository.find(data);
 };
 
 const findByChatId = async (chatId: number, take?: number, skip?: number) => {
@@ -15,4 +20,4 @@ const findByChatId = async (chatId: number, take?: number, skip?: number) => {
     skip: skip || 0,
   });
 };
-export default { create, findByChatId };
+export default { create, find, findByChatId };

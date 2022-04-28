@@ -12,15 +12,15 @@ const createChatMessage = async (data: {
   userId: number;
   content: string;
 }) => {
+  await redis.set(`chat:${data.chatId}:lastMessage`, JSON.stringify(data));
   const chatMessage = await chatMessageRepository.create(data);
+  await redis.zadd(
+    `chat:${data.chatId}`,
+    chatMessage.id,
+    JSON.stringify(chatMessage)
+  );
   await chatRepository.update(data.chatId, { lastMessage: chatMessage });
   await publisher.publish("CREATE_MESSAGE", JSON.stringify(chatMessage));
-  await redis.set(
-    `chatMessage:${data.chatId}`,
-    JSON.stringify(chatMessage),
-    "EX",
-    1000 * 60 * 30
-  );
 };
 
 const getChatMessageByChatId = async (
@@ -28,12 +28,27 @@ const getChatMessageByChatId = async (
   take?: number,
   skip?: number
 ) => {
-  const chatMessageList = await chatMessageRepository.findByChatId(
-    chatId,
-    take,
-    skip
-  );
-  return chatMessageList;
+  // zrevrange vs zrange
+  const redisResult = await redis.zrevrange(`chat:${chatId}`, 0, -1);
+  if (redisResult.length > 0 && skip === 0) {
+    return redisResult.map((item: string) => JSON.parse(item));
+  } else if (redisResult.length === 0) {
+    const chatMessageList = await chatMessageRepository.find({
+      where: { chatId },
+      order: { createdAt: "DESC" },
+      take,
+      skip,
+    });
+
+    if (chatMessageList.length === 0) {
+      return [];
+    }
+
+    chatMessageList.reverse().forEach((item: any) => {
+      redis.zadd(`chat:${chatId}`, item.id, JSON.stringify(item));
+    });
+    return chatMessageList;
+  }
 };
 
 export default {
