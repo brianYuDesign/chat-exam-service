@@ -16,9 +16,14 @@ const config = {
 };
 
 class Database {
-  conn: Connection | undefined;
+  connection: Connection | undefined;
+
   async init() {
-    this.conn = await createConnection(config as ConnectionOptions);
+    this.connection = await createConnection(config as ConnectionOptions);
+  }
+
+  getConnection() {
+    return this.connection as Connection;
   }
 }
 

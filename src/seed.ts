@@ -1,8 +1,10 @@
 import userService from "./services/user.service";
 import chatService from "./services/chat.service";
 import database from "./database";
+import logger from "./logger";
 
 const seed = async () => {
+  await logger.init();
   await database.init();
 
   const user1 = await userService.createUser({ name: "user1" });
@@ -18,4 +20,6 @@ const seed = async () => {
   await chatService.createChatroom({ userList: [user3, user4] });
 };
 
-seed();
+seed().then(() => {
+  logger.info({ message: "seed is complete!" });
+});

@@ -1,9 +1,13 @@
 import { getRepository } from "typeorm";
 import { ChatEntity } from "../entities/chat.entity";
-import { ChatMessageEntity } from "../entities/chat-message.entity";
 
-const create = (data: any) => {
+const create = (data: Partial<ChatEntity>) => {
   const chatRepository = getRepository(ChatEntity);
   return chatRepository.save(data);
 };
-export default { create };
+
+const update = (id: number, data: Partial<ChatEntity>) => {
+  const chatRepository = getRepository(ChatEntity);
+  return chatRepository.update(id, data);
+};
+export default { create, update };

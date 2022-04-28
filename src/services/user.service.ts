@@ -4,4 +4,9 @@ const createUser = async (data: { name: string }) => {
   return await userRepository.create(data);
 };
 
-export default { createUser };
+const getByName = async (name: string) => {
+  const user = await userRepository.findOneWithChatList({ name });
+  return user || [];
+};
+
+export default { createUser, getByName };

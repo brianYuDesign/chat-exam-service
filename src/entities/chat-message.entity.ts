@@ -10,7 +10,7 @@ export class ChatMessageEntity extends BaseEntity {
   chatId!: number;
 
   @Column({ type: "int", nullable: true })
-  sender!: number;
+  userId!: number;
 
   @Column({ type: "varchar", length: 100, nullable: false })
   content!: string;
