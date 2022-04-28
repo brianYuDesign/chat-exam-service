@@ -6,7 +6,11 @@ const createChatroom = async (data: { userList: UserEntity[] }) => {
   await chatRepository.create(data);
 };
 
-const createChatMessage = async (data: any) => {
+const createChatMessage = async (data: {
+  chatId: number;
+  userId: number;
+  content: string;
+}) => {
   const chatMessage = await chatMessageRepository.create(data);
   await chatRepository.update(data.chatId, { lastMessage: chatMessage });
   await publisher.publish("CREATE_MESSAGE", JSON.stringify(chatMessage));
